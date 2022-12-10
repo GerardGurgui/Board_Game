@@ -65,6 +65,8 @@ public class Board {
 
     public long totalNumberOfBoxes(){
 
+        //prueva mini camboios
+
         return this.height * this.width;
 
     }
