@@ -5,7 +5,7 @@ import GerardGurgui.GameBoard.DTO.PlayerDto;
 import GerardGurgui.GameBoard.controllers.utils.MessageResponseEntity;
 import GerardGurgui.GameBoard.entities.Dice;
 import GerardGurgui.GameBoard.entities.Player;
-import GerardGurgui.GameBoard.services.PlayerActionService;
+import GerardGurgui.GameBoard.services.MoveService;
 import GerardGurgui.GameBoard.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class PlayerController {
     private PlayerService playerService;
 
     @Autowired
-    private PlayerActionService playerActionService;
+    private MoveService moveService;
 
 
     ////------------CRUD-----------
@@ -105,7 +105,7 @@ public class PlayerController {
     @PostMapping("/throwDices/{id}")
     public ResponseEntity<Dice> launchDicesPlayer(@PathVariable Long id) {
 
-        return ResponseEntity.ok(playerActionService.launchDices(id));
+        return ResponseEntity.ok(moveService.launchDices(id));
 
     }
 }

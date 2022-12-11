@@ -9,7 +9,7 @@ import GerardGurgui.GameBoard.exceptions.customizedExceptions.ExistentUserNameEx
 import GerardGurgui.GameBoard.exceptions.customizedExceptions.PlayerNotFoundException;
 import GerardGurgui.GameBoard.mapper.DtoToPlayer;
 import GerardGurgui.GameBoard.repositories.DiceRepository;
-import GerardGurgui.GameBoard.repositories.PlayerActionRepository;
+import GerardGurgui.GameBoard.repositories.MoveRepository;
 import GerardGurgui.GameBoard.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class PlayerService {
     private DiceRepository diceRepository;
 
     @Autowired
-    private PlayerActionRepository playerActionRepository;
+    private MoveRepository moveRepository;
 
     @Autowired
     private DtoToPlayer dtoToPlayer;

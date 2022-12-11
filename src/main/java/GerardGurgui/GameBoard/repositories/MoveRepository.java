@@ -1,9 +1,9 @@
 package GerardGurgui.GameBoard.repositories;
 
-import GerardGurgui.GameBoard.entities.PlayerAction;
+import GerardGurgui.GameBoard.entities.Move;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PlayerActionRepository extends JpaRepository<PlayerAction,Long> {
+public interface MoveRepository extends JpaRepository<Move,Long> {
 }

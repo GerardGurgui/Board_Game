@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -65,15 +63,12 @@ public class Board {
 
     public long totalNumberOfBoxes(){
 
-        //prueva mini camboios
-
         return this.height * this.width;
 
     }
 
     public void addBoxesToBoard(){
 
-        PlayerAction playerAction = new PlayerAction();
 
         char letter;
 
@@ -84,7 +79,7 @@ public class Board {
 
                 Box box = new Box();
 
-                if ((i%2 == 0 && j%2 !=0) || (i%2 != 0 && j%2==0)){
+                if ((i%2 == 0 && j%2 != 0) || (i%2 != 0 && j%2 == 0)){
 
                     box.setColor("Black");
 
@@ -115,25 +110,6 @@ public class Board {
         }
     }
 
-
-    public boolean checkMoveLimits(long moveBox){
-
-        boolean insideBoard;
-
-        if (moveBox > this.getWidth() || moveBox > this.getHeight()){
-
-            insideBoard = false;
-            System.out.println("Out of limits");
-
-        } else {
-
-            insideBoard = true;
-            System.out.println("Inside of limits");
-        }
-
-        return insideBoard;
-
-    }
 
 
 

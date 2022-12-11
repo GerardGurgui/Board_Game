@@ -50,7 +50,7 @@ public class Player {
     //LIST OF ACTIONS
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "id_player",referencedColumnName = "id")
-    private Set<PlayerAction> listOfActions;
+    private Set<Move> listOfMoves;
 
 
     public void addThrow(Dice dice){
@@ -62,12 +62,12 @@ public class Player {
         listOfThrows.add(dice);
     }
 
-    public void addMovement(PlayerAction move){
+    public void addMovement(Move move){
 
-        if (listOfActions.isEmpty()){
-            listOfActions = new HashSet<>();
+        if (listOfMoves.isEmpty()){
+            listOfMoves = new HashSet<>();
         }
 
-        listOfActions.add(move);
+        listOfMoves.add(move);
     }
 }

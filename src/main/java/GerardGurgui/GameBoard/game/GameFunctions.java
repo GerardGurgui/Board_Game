@@ -30,7 +30,7 @@ public class GameFunctions {
 
     }
 
-    public static int numRandomDice3(){
+    public static int numRandomDice2(){
 
         return (int) (Math.random() * 6 +1);
 

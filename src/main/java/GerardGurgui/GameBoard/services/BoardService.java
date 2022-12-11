@@ -28,13 +28,8 @@ public class BoardService {
 
     private Board board;
 
-    public BoardService(){
-
-    }
 
     ////---- CREATE -----
-
-
     public Board createBoard(BoardDto boardDto){
 
         board = dtoToBoard.map(boardDto);

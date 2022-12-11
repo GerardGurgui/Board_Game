@@ -25,55 +25,36 @@ public class Dice {
     //SECOND DICE DETERMINES IF THE PLAYER MOVE Y AXIS(HEIGHT) OR X AXIS (WIDTH)
     private long dice2;
 
-    //THIRD DICE DETERMINES HOW MANY BOXES THE PLAYER MOVE
-    private long dice3;
 
     private long magicDice;
 
     //THROW DICES
-    public void launch(){
+    public void launchDice1(){
 
         //DICE 1
-        long noZero = GameFunctions.numRandomPositiveOrNegative();
+        long numDice1 = GameFunctions.numRandomPositiveOrNegative();
 
-        if (noZero == 0){
+        if (numDice1 == 0){
 
-            while (noZero == 0){
+            while (numDice1 == 0){
 
-                noZero = GameFunctions.numRandomPositiveOrNegative();
+                numDice1 = GameFunctions.numRandomPositiveOrNegative();
 
-                if (noZero != 0){
-                    setDice1(noZero);
+                if (numDice1 != 0){
+                    setDice1(numDice1);
                 }
             }
 
         } else{
 
-            setDice1(noZero);
+            setDice1(numDice1);
         }
 
-        //DICE 2
-        noZero = GameFunctions.numRandomPositiveOrNegative();
+    }
 
-        if (noZero == 0){
+    public void launchDice2(){
 
-            while (noZero == 0){
-
-                noZero = GameFunctions.numRandomPositiveOrNegative();
-
-                if (noZero != 0){
-                    setDice1(noZero);
-                }
-            }
-
-        } else{
-
-            setDice1(noZero);
-        }
-
-
-        //DICE 3
-        this.setDice3(GameFunctions.numRandomDice3());
+        setDice2(GameFunctions.numRandomDice2());
 
     }
 
