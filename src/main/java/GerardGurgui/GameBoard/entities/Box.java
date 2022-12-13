@@ -22,7 +22,7 @@ public class Box {
     private String color;
     private String name;
     private String position;
-    private boolean occupied;
+    private String occupied = "Void";
 
 
 }

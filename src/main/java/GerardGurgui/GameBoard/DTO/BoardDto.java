@@ -18,7 +18,7 @@ public class BoardDto implements Serializable {
     private String name;
     private Long height;
     private Long width;
-    private Long winBox;
+    private String winBox;
 
 
 }

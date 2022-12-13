@@ -33,6 +33,10 @@ public class DtoToPlayer implements IMapper<PlayerDto, Player>{
         playerEntity.setPassword(playerDto.getPassword());
         playerEntity.setSigninDay(LocalDate.now());
 
+        playerEntity.setHealth(100);
+
+
+
         return playerEntity;
 
     }

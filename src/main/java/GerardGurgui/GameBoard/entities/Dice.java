@@ -19,36 +19,38 @@ public class Dice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //FRIST DICE DETERMINES THE DIRECTION OF PLAYER(negative move back, positive move forward)
-    private long dice1;
+    //FIRST DICE DETERMINES HOW MANY ROWS THE PLAYER MOVE
+    private char dice1;
 
-    //SECOND DICE DETERMINES IF THE PLAYER MOVE Y AXIS(HEIGHT) OR X AXIS (WIDTH)
+    //SECOND DICE DETERMINES HOW MANY COLUMNS THE PLAYER MOVE
     private long dice2;
 
-
     private long magicDice;
+
 
     //THROW DICES
     public void launchDice1(){
 
         //DICE 1
-        long numDice1 = GameFunctions.numRandomPositiveOrNegative();
+//        long numDice1 = GameFunctions.numRandomPositiveOrNegative();
+//
+//        if (numDice1 == 0){
+//
+//            while (numDice1 == 0){
+//
+//                numDice1 = GameFunctions.numRandomPositiveOrNegative();
+//
+//                if (numDice1 != 0){
+//                    setDice1(numDice1);
+//                }
+//            }
+//
+//        } else{
+//
+//            setDice1(numDice1);
+//        }
 
-        if (numDice1 == 0){
-
-            while (numDice1 == 0){
-
-                numDice1 = GameFunctions.numRandomPositiveOrNegative();
-
-                if (numDice1 != 0){
-                    setDice1(numDice1);
-                }
-            }
-
-        } else{
-
-            setDice1(numDice1);
-        }
+        setDice1(GameFunctions.numRandomDice1());
 
     }
 

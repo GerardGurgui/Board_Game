@@ -1,13 +1,18 @@
 package GerardGurgui.GameBoard.services;
 
 import GerardGurgui.GameBoard.DTO.PlayerDto;
-import GerardGurgui.GameBoard.entities.*;
+import GerardGurgui.GameBoard.entities.Box;
+import GerardGurgui.GameBoard.entities.Dice;
+import GerardGurgui.GameBoard.entities.Move;
+import GerardGurgui.GameBoard.entities.Player;
 import GerardGurgui.GameBoard.exceptions.ResourceNotFoundException;
 import GerardGurgui.GameBoard.exceptions.customizedExceptions.DicesPlayerException;
 import GerardGurgui.GameBoard.exceptions.customizedExceptions.ExistentEmailException;
 import GerardGurgui.GameBoard.exceptions.customizedExceptions.ExistentUserNameException;
 import GerardGurgui.GameBoard.exceptions.customizedExceptions.PlayerNotFoundException;
+import GerardGurgui.GameBoard.game.GameFunctions;
 import GerardGurgui.GameBoard.mapper.DtoToPlayer;
+import GerardGurgui.GameBoard.repositories.BoxRepository;
 import GerardGurgui.GameBoard.repositories.DiceRepository;
 import GerardGurgui.GameBoard.repositories.MoveRepository;
 import GerardGurgui.GameBoard.repositories.PlayerRepository;
@@ -18,8 +23,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
+
 @Service
-public class PlayerService {
+public class PlayerServiceImpl implements Iservice<PlayerDto, Player>{
+
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -31,21 +38,20 @@ public class PlayerService {
     private MoveRepository moveRepository;
 
     @Autowired
-    private DtoToPlayer dtoToPlayer;
+    private BoxRepository boxRepository;
 
     @Autowired
-    private BoardService boardService;
+    private BoardServiceImpl boardService;
+
+    @Autowired
+    private DtoToPlayer dtoToPlayer;
 
 
-
-
-    //// -------------CRUD-----------
-
-    //----CREATE----
-    public Player createPlayer(PlayerDto playerDto){
+    ///---CREATE
+    @Override
+    public Player save(PlayerDto playerDto) {
 
         Player playerEntity = dtoToPlayer.map(playerDto);
-
 
         //CHECK REPEAT USER NAME
         boolean existentUserName = playerRepository.existsByUserName(playerEntity.getUserName());
@@ -56,18 +62,21 @@ public class PlayerService {
 
         }
 
+
+
         return playerRepository.save(playerEntity);
 
     }
 
+    ///---READ
 
-    //----READ----
-    public List<Player> getAll(){
+    @Override
+    public List<Player> getAll() {
 
         return playerRepository.findAll();
     }
 
-
+    @Override
     public Player getOne(Long id) {
 
         Player player = playerRepository.findById(id)
@@ -76,20 +85,19 @@ public class PlayerService {
         return player;
     }
 
+    ///---UPDATE
 
+    @Override
+    public void update(PlayerDto playerDto, Long id) {
 
-    //----UPDATE----
-
-    public void update(PlayerDto playerDTO, Long id) {
-
-        //CHECK USER NAME
-        if (playerRepository.existsByUserName(playerDTO.getUserName())){
+        //CHECK USERNAME
+        if (playerRepository.existsByUserName(playerDto.getUserName())){
 
             throw new ExistentUserNameException(HttpStatus.FOUND,"The user name is already taken");
         }
 
         //CHECK EMAIL
-        if (playerRepository.existsByEmail(playerDTO.getEmail())){
+        if (playerRepository.existsByEmail(playerDto.getEmail())){
 
             throw new ExistentEmailException(HttpStatus.FOUND,"The Email is already in use ");
         }
@@ -103,18 +111,30 @@ public class PlayerService {
         Player playerEntity = playerRepository.findById(id).get();
 
 
-        playerEntity.setUserName(playerDTO.getUserName());
-        playerEntity.setEmail(playerDTO.getEmail());
+        playerEntity.setUserName(playerDto.getUserName());
+        playerEntity.setEmail(playerDto.getEmail());
 
         playerRepository.save(playerEntity);
-
     }
 
 
 
     //----DELETE----
 
-        //DELETE THROWS PLAYER
+    @Override
+    public void delete(Long id) {
+
+        //CHECK PLAYER EXISTS
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Player","id",id));
+
+        playerRepository.delete(player);
+
+    }
+
+
+
+    //DELETE THROWS PLAYER
     public void deleteThrows(Long id) {
 
         //CHECK IF PLAYER EXISTS
@@ -147,23 +167,66 @@ public class PlayerService {
 
     }
 
-
-
-    public void deletePlayer(Long id) {
+    //PLAYER ACTIONS-- LAUNCH DICES
+    public Dice launchDices(Long id) {
 
         //CHECK PLAYER EXISTS
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Player","id",id));
+        Player player = getOne(id);
 
-        playerRepository.delete(player);
+
+
+        //---- VALIDAR QUE HAYA MINIMO 2 JUGADORES
+
+        //DICES
+        Dice dice = new Dice();
+
+        //THROW DICES
+        dice.launchDice1();
+        dice.launchDice2();
+
+        //ADD THROW TO PLAYER
+        player.addThrow(dice);
+        diceRepository.save(dice);
+
+        movePlayer(player, dice);
+
+        return dice;
 
     }
 
-    public void deleteAllPLayers(){
+    //MOVE PLAYER
+    public void movePlayer(Player player, Dice dice) {
 
-        playerRepository.deleteAll();
+        //ACTIONS - MOVE
+        //ACTUAL BOX PLAYER
+        String actualBoxPosition = player.getActualBox();
+        Box actualBox = boardService.getOneBox(actualBoxPosition);
+
+        //NEW BOX
+        char letter = dice.getDice1();
+        long number = dice.getDice2();
+
+        String newBoxPosition = (letter+""+number);
+
+        Box box = boardService.getOneBox(newBoxPosition);
+
+        //CHECK LIMIT MOVE PLAYER INSIDE BOARD
+        Move move = new Move();
+        boolean playerMoves = move.movePlayer(player, dice, box);
+
+        if(playerMoves){
+
+            actualBox.setOccupied("Void");
+        }
+
+
+
+        //ADD MOVE TO PLAYER
+        player.addMovement(move);
+        moveRepository.save(move);
+        playerRepository.save(player);
+        boxRepository.save(box);
+
+
     }
-
-
-
 }

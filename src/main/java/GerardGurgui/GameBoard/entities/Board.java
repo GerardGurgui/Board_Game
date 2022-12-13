@@ -23,7 +23,6 @@ public class Board {
 
 
     @ManyToOne
-    @JoinColumn(name = "board_id")
     private static Board board;
 
     //BOARD PARAMETERS
@@ -34,7 +33,8 @@ public class Board {
 
     //SPECIAL BOX
     private String specialBox;
-    private long winBox;
+    private String winBox;
+
 //    private Bow bow;
 //    private MedicalKit medicalKit;
 
@@ -50,7 +50,6 @@ public class Board {
 
     //BOXES
     @OneToMany(cascade = CascadeType.ALL)
-            @JoinColumn(name = "boxes")
     List<Box> listOfBoxes;
 
     private Board(){
@@ -67,8 +66,7 @@ public class Board {
 
     }
 
-    public void addBoxesToBoard(){
-
+    public List<Box> addBoxesToBoard(){
 
         char letter;
 
@@ -98,7 +96,7 @@ public class Board {
 
         }
 
-        System.out.println(listOfBoxes.get(0).getName()+ " " + listOfBoxes.get(0).getColor());
+        return listOfBoxes;
 
     }
 

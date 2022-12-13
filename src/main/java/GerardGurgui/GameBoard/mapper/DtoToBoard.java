@@ -8,8 +8,6 @@ import GerardGurgui.GameBoard.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class DtoToBoard implements IMapper<BoardDto, Board>{
 
@@ -29,21 +27,24 @@ public class DtoToBoard implements IMapper<BoardDto, Board>{
         }
 
         if (boardDto.getHeight() == null){
-            board.setHeight(GameFunctions.numRandomBoard());
+//            board.setHeight(GameFunctions.numRandomBoard());
+            board.setHeight(6);
+
 
         } else {
             board.setHeight(boardDto.getHeight());
         }
 
         if (boardDto.getWidth() == null){
-            board.setWidth(GameFunctions.numRandomBoard());
+//            board.setWidth(GameFunctions.numRandomBoard());
+            board.setWidth(6);
 
         } else {
             board.setWidth(boardDto.getHeight());
         }
 
         if (boardDto.getWinBox() == null){
-            board.setWinBox(GameFunctions.numRandomBoard());
+            board.setWinBox("B 4"); //COMO GENERAR RANDOM??
 
         }else {
             board.setWinBox(boardDto.getWinBox());
@@ -53,6 +54,9 @@ public class DtoToBoard implements IMapper<BoardDto, Board>{
 
         Player player1 = playerRepository.findById(1L).get();
         Player player2 = playerRepository.findById(2L).get();
+
+        //ASSIGN A START POSITION
+        GameFunctions.assignStartPositionPlayers(player1,player2);
 
         board.setFirstPlayer(player1);
         board.setSecondPlayer(player2);

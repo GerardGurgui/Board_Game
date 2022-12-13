@@ -33,13 +33,13 @@ public class Player {
     private long axysY; //HEIGHT
 
 //    //ATTRIBUTES PLAYER
-//    private int health;
+    private long health;
 //
 //    //ATTRIBUTES GAME
 //    private int percentage;
 //    private int wins;
 //    private int level;
-    private long actualBox;
+    private String actualBox;
 
 
     //LIST OF THROWS
@@ -51,6 +51,7 @@ public class Player {
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "id_player",referencedColumnName = "id")
     private Set<Move> listOfMoves;
+
 
 
     public void addThrow(Dice dice){

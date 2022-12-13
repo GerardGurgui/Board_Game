@@ -5,8 +5,7 @@ import GerardGurgui.GameBoard.DTO.PlayerDto;
 import GerardGurgui.GameBoard.controllers.utils.MessageResponseEntity;
 import GerardGurgui.GameBoard.entities.Dice;
 import GerardGurgui.GameBoard.entities.Player;
-import GerardGurgui.GameBoard.services.MoveService;
-import GerardGurgui.GameBoard.services.PlayerService;
+import GerardGurgui.GameBoard.services.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +18,7 @@ import java.util.List;
 public class PlayerController {
 
     @Autowired
-    private PlayerService playerService;
-
-    @Autowired
-    private MoveService moveService;
+    private PlayerServiceImpl playerService;
 
 
     ////------------CRUD-----------
@@ -32,7 +28,7 @@ public class PlayerController {
     @PostMapping("/add")
     public ResponseEntity<MessageResponseEntity> addPlayer(@RequestBody PlayerDto playerDto){
 
-        playerService.createPlayer(playerDto);
+        playerService.save(playerDto);
 
         return new ResponseEntity<>(new MessageResponseEntity("Player created succesfully"),HttpStatus.CREATED);
 
@@ -73,19 +69,12 @@ public class PlayerController {
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<MessageResponseEntity> deleteOnePlayer(@PathVariable Long id){
 
-       playerService.deletePlayer(id);
+       playerService.delete(id);
 
        return new ResponseEntity<>(new MessageResponseEntity("Player deleted successfully"),HttpStatus.OK);
 
     }
-    @DeleteMapping("/deleteAll")
-    public ResponseEntity<MessageResponseEntity> deleteAllPlayers(){
 
-        playerService.deleteAllPLayers();
-
-        return new ResponseEntity<>(new MessageResponseEntity("All players have been deleted"),HttpStatus.OK);
-
-    }
 
     @DeleteMapping("/deleteThrows/{id}")
     public ResponseEntity<MessageResponseEntity> deleteThrowsPlayer(@PathVariable Long id){
@@ -105,7 +94,7 @@ public class PlayerController {
     @PostMapping("/throwDices/{id}")
     public ResponseEntity<Dice> launchDicesPlayer(@PathVariable Long id) {
 
-        return ResponseEntity.ok(moveService.launchDices(id));
+        return ResponseEntity.ok(playerService.launchDices(id));
 
     }
 }
