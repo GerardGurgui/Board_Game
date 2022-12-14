@@ -53,6 +53,9 @@ public class GameFunctions {
 
     public static char numRandomDice1(){
 
+        //REDUCIR NUM DE COLUMNAS Y FILAS QUE PUEDE MOVERSE EL JUGADOR, A 2 O 3??
+        //QUIZA CON OBJETOS O ALGUN BUFO PUEDE MOVERSE MAS, SINO CON UNA TIARADA SE PLANTA LA FINAL DEL TABLERO
+
         int num = (int) (Math.random() * 6 +1);
         char row = ' ';
 

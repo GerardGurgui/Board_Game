@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface Iservice<I,O> {
 
-    O save(I input);
+    void save(I input);
 
     List<O> getAll();
 

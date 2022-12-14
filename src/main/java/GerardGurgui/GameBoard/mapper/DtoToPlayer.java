@@ -35,8 +35,6 @@ public class DtoToPlayer implements IMapper<PlayerDto, Player>{
 
         playerEntity.setHealth(100);
 
-
-
         return playerEntity;
 
     }

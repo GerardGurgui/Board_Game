@@ -16,6 +16,8 @@ import GerardGurgui.GameBoard.repositories.BoxRepository;
 import GerardGurgui.GameBoard.repositories.DiceRepository;
 import GerardGurgui.GameBoard.repositories.MoveRepository;
 import GerardGurgui.GameBoard.repositories.PlayerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,8 +27,9 @@ import java.util.Set;
 
 
 @Service
-public class PlayerServiceImpl implements Iservice<PlayerDto, Player>{
+public class PlayerServiceImpl implements Iservice <PlayerDto, Player>{
 
+    private static final Logger log = LoggerFactory.getLogger(GameFunctions.class);
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -49,7 +52,7 @@ public class PlayerServiceImpl implements Iservice<PlayerDto, Player>{
 
     ///---CREATE
     @Override
-    public Player save(PlayerDto playerDto) {
+    public void save(PlayerDto playerDto) {
 
         Player playerEntity = dtoToPlayer.map(playerDto);
 
@@ -62,9 +65,7 @@ public class PlayerServiceImpl implements Iservice<PlayerDto, Player>{
 
         }
 
-
-
-        return playerRepository.save(playerEntity);
+        playerRepository.save(playerEntity);
 
     }
 
@@ -79,10 +80,8 @@ public class PlayerServiceImpl implements Iservice<PlayerDto, Player>{
     @Override
     public Player getOne(Long id) {
 
-        Player player = playerRepository.findById(id)
+        return playerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Player","id",id));
-
-        return player;
     }
 
     ///---UPDATE
@@ -151,13 +150,10 @@ public class PlayerServiceImpl implements Iservice<PlayerDto, Player>{
 
         //DELETE ALL THROWS OF THIS PLAYER
         Set<Dice> dices = player.getListOfThrows();
-        Long idLaunch;
 
         for (Dice dice : dices) {
 
-            idLaunch = dice.getId();
-            diceRepository.deleteById(idLaunch);
-
+            diceRepository.delete(dice);
         }
 
         player.getListOfThrows().clear();
@@ -167,13 +163,13 @@ public class PlayerServiceImpl implements Iservice<PlayerDto, Player>{
 
     }
 
+
+
     //PLAYER ACTIONS-- LAUNCH DICES
     public Dice launchDices(Long id) {
 
         //CHECK PLAYER EXISTS
         Player player = getOne(id);
-
-
 
         //---- VALIDAR QUE HAYA MINIMO 2 JUGADORES
 
@@ -205,27 +201,91 @@ public class PlayerServiceImpl implements Iservice<PlayerDto, Player>{
         //NEW BOX
         char letter = dice.getDice1();
         long number = dice.getDice2();
-
         String newBoxPosition = (letter+""+number);
-
         Box box = boardService.getOneBox(newBoxPosition);
 
-        //CHECK LIMIT MOVE PLAYER INSIDE BOARD
+        //NEW MOVE, PLAYER, DICE AND NEXT BOX
         Move move = new Move();
         boolean playerMoves = move.movePlayer(player, dice, box);
 
+        //IF THE PLAYER CAN MOVE TO THE NEXT BOX, MAKE ACTUAL BOX VOID
         if(playerMoves){
 
-            actualBox.setOccupied("Void");
+            player.addMovement(move);
+            actualBox.setOccupied("Not occupied");
+        }
+
+        //ADD MOVE TO PLAYER
+        moveRepository.save(move);
+        playerRepository.save(player);
+        boxRepository.save(box);
+
+
+        //6- VERIFICAR POSICIÓN DEL OTRO JUGADOR?? PAR PODER ATACAR O NO SE, QUIZÁ CON RETURN Y DESDE SERVICIOS
+        checkPositionsPlayers();
+
+    }
+
+    public void checkPositionsPlayers(){
+
+        Player player1 = getOne(1L);
+        String actualBoxP1 = player1.getActualBox();
+        Box player1ActualBox = boardService.getOneBox(actualBoxP1);
+
+
+        Player player2 = getOne(2L);
+        String actualBoxP2 = player2.getActualBox();
+        Box player2ActualBox = boardService.getOneBox(actualBoxP2);
+
+
+
+        if ((player1ActualBox.getBoxRow()+1) == (player2ActualBox.getBoxRow())){
+
+            log.warn("jugadores a 1 fila de distancia 1R IF");
+
+            if ((player1ActualBox.getBoxColumn()+1) == (player2ActualBox.getBoxColumn())
+                    || (player1ActualBox.getBoxColumn()) == (player2ActualBox.getBoxColumn())){
+
+                log.warn("jugadores a 1 columna de distancia 2n IF");
+
+            }
+
+            if ((player1ActualBox.getBoxColumn()-1) == (player2ActualBox.getBoxColumn())
+                    || (player1ActualBox.getBoxColumn()) == (player2ActualBox.getBoxColumn())){
+
+                log.warn("jugadores a -1 columna de distancia 3r IF");
+
+            }
+
+
+
+        }
+
+        if ((player1ActualBox.getBoxRow()-1) == (player2ActualBox.getBoxRow())){
+
+            log.warn("Jugadores a -1 fila de distancia 4t IF");
+
+            if ((player1ActualBox.getBoxColumn()-1) == (player2ActualBox.getBoxColumn())
+                    || (player1ActualBox.getBoxColumn()) == (player2ActualBox.getBoxColumn())){
+
+                log.warn("jugadores a -1 columna de distancia 5e IF");
+
+            }
+
+            if ((player1ActualBox.getBoxColumn()+1) == (player2ActualBox.getBoxColumn())
+                    || (player1ActualBox.getBoxColumn()) == (player2ActualBox.getBoxColumn())){
+
+                log.warn("jugadores a 1 columna de distancia 6r IF");
+
+            }
+
         }
 
 
 
-        //ADD MOVE TO PLAYER
-        player.addMovement(move);
-        moveRepository.save(move);
-        playerRepository.save(player);
-        boxRepository.save(box);
+
+
+
 
 
     }

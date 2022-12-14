@@ -53,7 +53,6 @@ public class Board {
     List<Box> listOfBoxes;
 
     private Board(){
-
         listOfBoxes = new ArrayList<>();
     }
 
@@ -68,6 +67,7 @@ public class Board {
 
     public List<Box> addBoxesToBoard(){
 
+        Box box;
         char letter;
 
         //I rows, J columns
@@ -75,7 +75,8 @@ public class Board {
 
             for (int j = 1; j <= width; j++) {
 
-                Box box = new Box();
+                box = new Box();
+                box.setOccupied("Not occupied");
 
                 if ((i%2 == 0 && j%2 != 0) || (i%2 != 0 && j%2 == 0)){
 
@@ -86,7 +87,8 @@ public class Board {
                     box.setColor("White");
                 }
 
-                box.setPosition(i + " " + j);
+                box.setBoxRow(i);
+                box.setBoxColumn(j);
                 letter = (char)(64+i);
 
                 box.setName(Character.toString(letter) + j);

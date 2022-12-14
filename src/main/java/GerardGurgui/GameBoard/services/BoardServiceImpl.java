@@ -33,7 +33,7 @@ public class BoardServiceImpl implements Iservice<BoardDto,Board> {
 
     ////---- CREATE -----
     @Override
-    public Board save(BoardDto boardDto){
+    public void save(BoardDto boardDto){
 
         board = dtoToBoard.map(boardDto);
 
@@ -43,7 +43,7 @@ public class BoardServiceImpl implements Iservice<BoardDto,Board> {
 
         GameFunctions.assignStartPositionBoxes(getOneBox("A1"),getOneBox("F6"));
 
-        return boardRepository.save(board);
+        boardRepository.save(board);
     }
 
 

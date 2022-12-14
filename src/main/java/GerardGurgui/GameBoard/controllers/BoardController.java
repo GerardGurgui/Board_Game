@@ -20,9 +20,11 @@ public class BoardController {
     private BoardServiceImpl boardServiceImpl;
 
     @PostMapping("/create")
-    public Board createBoard(@RequestBody BoardDto boardDto){
+    public ResponseEntity<MessageResponseEntity> createBoard(@RequestBody BoardDto boardDto){
 
-        return boardServiceImpl.save(boardDto);
+        boardServiceImpl.save(boardDto);
+
+        return new ResponseEntity<>(new MessageResponseEntity("Board created, the game starts"), HttpStatus.CREATED);
 
     }
 

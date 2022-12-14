@@ -21,8 +21,9 @@ public class Box {
 
     private String color;
     private String name;
-    private String position;
-    private String occupied = "Void";
+    private int boxRow;
+    private int boxColumn;
+    private String occupied;
 
 
 }
