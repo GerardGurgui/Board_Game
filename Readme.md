@@ -8,7 +8,6 @@
 El objetivo principal será llegar a una casilla del tablero que se asignará aleatoria al empezar la partida,
 el jugador que llegue antes, o que mate al otro antes de llegar a la casilla ganará.
     
-EL JUGADOR PUEDE PERDER LA PARTIDA SI PASA DE LOS LÍMITES DEL TABLERO??
 
 ### - Características del juego 
 
